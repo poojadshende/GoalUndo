@@ -162,6 +162,28 @@ TEST(GoalUndoTest, remove_givenOperation_oneGoal_oneOperation)
 	ASSERT_EQ(gundo.getGoal(), "");
 }
 
+TEST(GoalUndoTest, remove_all_Operations)
+{
+	string goal1="rectanle", op1="side1", op2="side2";
+	GoalUndo gundo;
+	gundo.addOperation(goal1, op1);	
+	gundo.addOperation(op2);
+	gundo.undoOperation(op2);	
+	gundo.undoOperation(op1);
+	ASSERT_EQ(gundo.getOperations(), "");
+}
+
+TEST(GoalUndoTest, remove_MultipleOperations_with_same_name)
+{
+	string goal1="rectanle", op1="side1", op2="side1";
+	GoalUndo gundo;
+	gundo.addOperation(goal1, op1);	
+	gundo.addOperation(op2);
+		
+	gundo.undoOperation(op1);
+	ASSERT_EQ(gundo.getOperations(), "side1");
+}
+
 TEST(GoalUndoTest, remove_givenOperation_opDoesNotExist)
 {
 	string goal1="rectanle", op1="side1";
