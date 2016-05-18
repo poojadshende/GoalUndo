@@ -14,11 +14,6 @@ class GoalUndoTest : public ::testing::Test
 		virtual void TearDown(){}
 };
 
-/*TEST(GoalUndoTest, sanityCheck)
-{
-	ASSERT_TRUE(true);
-}*/
-
 TEST(GoalUndoTest, add_operation_emptyGoals)
 {
 	string str="line";
@@ -90,7 +85,7 @@ TEST(GoalUndoTest, check_undoGoal_nonEmptyGoal)
 	ASSERT_EQ(gundo.getOperations(), "");		
 }
 
-TEST(GoalUndoTest, check_undoGoal_emptyGoals)
+TEST(GoalUndoTest, undoGoal_emptyGoals)
 {
 	string str1="triangle", str2="";
 	GoalUndo gundo;
@@ -99,7 +94,7 @@ TEST(GoalUndoTest, check_undoGoal_emptyGoals)
 	ASSERT_EQ(gundo.getGoal(), "");
 }
 
-TEST(GoalUndoTest, check_undoOperation_goal_with_multipleOperations)
+TEST(GoalUndoTest, undoOperation_goal_with_multipleOperations)
 {
 	string str1="square", str2="side1", str3="side2", str4="side3", str5="side4";
 	string result1=str2+" "+str3+" "+str4;
@@ -117,7 +112,7 @@ TEST(GoalUndoTest, check_undoOperation_goal_with_multipleOperations)
 	ASSERT_EQ(gundo.getOperations(), str2);
 }
 
-TEST(GoalUndoTest, check_undoOperation_goal_with_oneOperation)
+TEST(GoalUndoTest, undoOperation_goal_with_oneOperation)
 {
 	string goal="circle", op1="radius", newGoal="line", newOp="";
 	GoalUndo gundo;
@@ -193,5 +188,53 @@ TEST(GoalUndoTest, remove_givenOperation_opDoesNotExist)
 	gundo.undoOperation("side2");
 	ASSERT_EQ(gundo.getGoal(), goal1);
 	ASSERT_EQ(gundo.getOperations(), op1);	
+}
+
+TEST(GoalUndoTest, getOperation_emptyOpReturned)
+{
+	string goal1="rectanle", op1="side1";
+	GoalUndo gundo;
+	gundo.addOperation(goal1, op1);	
+	
+	gundo.undoOperation(op1);
+	ASSERT_EQ(gundo.getOperations(), "");	
+}
+
+TEST(GoalUndoTest, getOperation_nonEmptyOpReturned)
+{
+	string goal1="rectanle", op1="side1", op2="side2";
+	GoalUndo gundo;
+	gundo.addOperation(goal1, op1);	
+	gundo.addOperation(op2);
+	gundo.undoOperation(op2);	
+	ASSERT_EQ(gundo.getOperations(), op1);
+}
+
+TEST(GoalUndoTest, getOperation_noGoalExists)
+{
+	string op1="line";
+	GoalUndo gundo;
+	gundo.addOperation(op1);		
+	ASSERT_EQ(gundo.getOperations(), op1);
+}
+
+TEST(GoalUndoTest, getGoal_goalsExist)
+{
+	string goal1="rectanle", op1="side1", op2="side2";
+	GoalUndo gundo;
+	gundo.addOperation(goal1, op1);	
+	gundo.addOperation(op2);	
+	ASSERT_EQ(gundo.getGoal(), goal1);
+}
+
+TEST(GoalUndoTest, getGoal_goalsDoNotExist)
+{
+	string goal1="rectanle", goal2="triangle", op1="side1", op2="side2";
+	GoalUndo gundo;
+	gundo.addOperation(goal1, op1);	
+	gundo.addOperation(goal2, op2);
+	gundo.undoGoal();
+	gundo.undoGoal();	
+	ASSERT_EQ(gundo.getGoal(), "");
 }
 
